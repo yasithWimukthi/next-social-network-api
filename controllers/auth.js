@@ -1,4 +1,5 @@
 import jwt from 'jsonwebtoken';
+import expressJwt from 'express-jwt';
 
 import User from '../models/user';
 import {comparePassword, hashPassword} from "../helpers/auth";
@@ -61,5 +62,15 @@ export const login = async (req,res) => {
     }catch (err) {
         console.log(err);
         return res.status(400).send('Login failed. Try again');
+    }
+}
+
+export const currentUser = async (req,res) => {
+    try {
+        const user = await User.findById(req.user._id);
+        res.json({ok: true})
+    }catch (e) {
+        console.log(e);
+        res.sendStatus(400);
     }
 }
