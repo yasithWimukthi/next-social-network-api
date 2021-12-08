@@ -7,15 +7,29 @@ import {comparePassword, hashPassword} from "../helpers/auth";
 export const register = async (req,res) => {
     const {name,email,password,secret} = req.body;
 
-    if (!name) return res.status(400).send('Name is required');
-    if (!password || password.length<6){
-        return res.status(400).send('Password is required and must be at least 6 characters');
+    if (!name.trim()) {
+        return res.json({
+            error : "Name is required."
+        })
     }
-    if (!secret) return res.status(400).send('Answer is required');
+    if (!password.trim() || password.length<6){
+        return res.json({
+            error : "New password is required and should be at least 6 characters."
+        })
+    }
+    if (!secret.trim()) {
+        return res.json({
+            error : "Answer is required."
+        })
+    }
 
     const exist = await User.findOne({email});
 
-    if (exist) return res.status(400).send('Email is taken')
+    if (exist) {
+        return res.json({
+            error : "Email is taken."
+        })
+    }
 
     const hashedPassword = await hashPassword(password);
 
@@ -32,8 +46,9 @@ export const register = async (req,res) => {
             ok: true
         })
     }catch (e) {
-        console.log(`Registration Error: ${e}`);
-        return res.status(400).send('Registration Error. Try again');
+        return res.json({
+            error : "Registration Error. Try again."
+        })
     }
 }
 
@@ -43,10 +58,18 @@ export const login = async (req,res) => {
 
         const user = await User.findOne({email});
 
-        if (!user) return res.status(400).send('User not found. Try again');
+        if (!user) {
+            return res.json({
+                error : "User not found. Try again."
+            })
+        }
 
         const isPasswordMatch = comparePassword(password,user.password);
-        if (!isPasswordMatch) return res.status(400).send('Password is wrong. Try again');
+        if (!isPasswordMatch) {
+            return res.json({
+                error : "Password is wrong. Try again."
+            })
+        }
 
         const token = jwt.sign({_id : user._id},process.env.JWT_SECRET,{
             expiresIn : '7d'
@@ -61,7 +84,10 @@ export const login = async (req,res) => {
         })
     }catch (err) {
         console.log(err);
-        return res.status(400).send('Login failed. Try again');
+        return res.json({
+            error : "Login failed. Try again."
+        })
+
     }
 }
 
@@ -73,4 +99,43 @@ export const currentUser = async (req,res) => {
         console.log(e);
         res.sendStatus(400);
     }
+}
+
+export const forgotPassword = async (req,res) => {
+    const {email,newPassword,secret} = req.body;
+
+    if(!newPassword.trim() || newPassword.length<6 ){
+        return res.json({
+            error : "New password is required and should be at least 6 characters."
+        })
+    }
+
+    if(!secret.trim()){
+        return res.json({
+            error : "Secret is reqired."
+        }) 
+    }
+
+    const user = await User.findOne({email,secret});
+
+    if (!user){
+        return res.json({
+            error : "We can not verify you. Please try again."
+        })
+    }
+
+    try{
+        const hashedPassword = hashPassword(newPassword);
+        await User.findByIdAndUpdate(user._id,{password:hashedPassword});
+        return res.json({
+            error : "Password was changed. You can login with new password."
+        })
+    }
+    catch (err) {
+        console.log(err);
+        return res.json({
+            error : "Something went wrong. Please try again."
+        })
+    }
+
 }
