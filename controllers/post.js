@@ -9,16 +9,18 @@ cloudinary.config({
 });
 
 export const createPost = async (req,res) => {
-    const {content} = req.body;
+    const {content,image} = req.body;
     if (!content.trim()){
         return res.json({
             error : "Content is required."
         })
     }
     try{
-        const post = new Post({content,postedBy:req.user._id});
+        const post = new Post({content,image,postedBy:req.user._id});
         post.save();
-        res.json(post)
+        return res.json({
+            message : "Post is saved."
+        })
     }
     catch (e) {
         console.log(e);
