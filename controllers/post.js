@@ -19,3 +19,7 @@ export const createPost = async (req,res) => {
         })
     }
 }
+
+export const uploadImage = async (req,res) => {
+    console.log(req.files)
+}
