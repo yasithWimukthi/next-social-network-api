@@ -1,6 +1,8 @@
 import express, {json} from 'express';
 import mongoose from 'mongoose';
+import cors from "cors";
 const authRoutes = require('./routes/auth');
+const postRoutes = require('./routes/post');
 const bodyParser = require('body-parser');
 
 const morgan = require('morgan');
@@ -15,6 +17,7 @@ app.use(express.urlencoded({extended:true}));
 // app.use(cors({
 //     origin:['http://localhost:3000/']
 // }))
+// app.use(cors())
 app.use((req, res, next) => {
     res.setHeader('Access-Control-Allow-Origin', '*');
     res.setHeader(
@@ -27,6 +30,7 @@ app.use((req, res, next) => {
 });
 
 app.use('/api/auth', authRoutes);
+app.use('/api/post', postRoutes);
 
 mongoose.connect(process.env.CONNECTION_URL)
     .then(()=>{
