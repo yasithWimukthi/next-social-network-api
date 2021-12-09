@@ -1,6 +1,5 @@
 import express, {json} from 'express';
 import mongoose from 'mongoose';
-import cors from "cors";
 const authRoutes = require('./routes/auth');
 const postRoutes = require('./routes/post');
 const bodyParser = require('body-parser');
@@ -38,7 +37,7 @@ mongoose.connect(process.env.CONNECTION_URL)
         const port = process.env.PORT || 8000;
 
         app.listen(port,()=>{
-            console.log('server listening on port 8000')
+            console.log('server listening on port 9000')
         })
     })
     .catch(err => {
