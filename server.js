@@ -34,7 +34,7 @@ app.use('/api/post', postRoutes);
 mongoose.connect(process.env.CONNECTION_URL)
     .then(()=>{
         console.log('database connected')
-        const port = process.env.PORT || 8000;
+        const port = process.env.PORT || 9000;
 
         app.listen(port,()=>{
             console.log('server listening on port 9000')
