@@ -69,3 +69,27 @@ export const userPost = async (req,res) => {
         console.log(e);
     }
 }
+
+export const updatePost = async (req,res) => {
+    try {
+        const post = await Post.findByIdAndUpdate(req.params._id,req.body,{
+            new: true
+        });
+        res.json(post);
+    }catch (e) {
+        console.log(e);
+    }
+}
+
+export const deletePost = async (req,res) => {
+    try {
+        const post = await Post.findByIdAndDelete(req.params._id);
+        if (post.image && post.image.public_id){
+            const image = await cloudinary.uploader.destroy(post.image.public_id);
+        }
+        res.json({ok:true});
+    }
+    catch (e) {
+        console.log(e);
+    }
+}
