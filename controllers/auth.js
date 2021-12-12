@@ -3,6 +3,7 @@ import expressJwt from 'express-jwt';
 
 import User from '../models/user';
 import {comparePassword, hashPassword} from "../helpers/auth";
+import {nanoid} from "nanoid";
 
 export const register = async (req,res) => {
     const {name,email,password,secret} = req.body;
@@ -37,7 +38,8 @@ export const register = async (req,res) => {
         name,
         email,
         password:hashedPassword,
-        secret
+        secret,
+        username: nanoid()
     });
 
     try {
