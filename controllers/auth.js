@@ -141,3 +141,41 @@ export const forgotPassword = async (req,res) => {
     }
 
 }
+
+export const profileUpdate = async (req,res) => {
+    try {
+        const data = {};
+
+        if (req.body.username){
+            data.username = req.body.username;
+        }
+        if (req.body.about){
+            data.about = req.body.about;
+        }
+        if (req.body.name){
+            data.name = req.body.name;
+        }
+        if (req.body.password){
+            if (req.body.password.trim().length > 6){
+                return res.json({
+                    error : 'Password is required and must be at least 6 characters.'
+                })
+            }else{
+                data.password = req.body.password;
+            }
+        }
+        if (req.body.secret){
+            data.secret = req.body.secret;
+        }
+
+        let user = await User.findByIdAndUpdate(req.user._id,data,{new: true});
+        user.password = undefined;
+        user.secret = undefined;
+        res.json(user)
+    }catch (e) {
+        if (e.code == 11000){
+            return res.json({error : 'Duplicate user. Please try again'})
+        }
+        console.log(e)
+    }
+}
