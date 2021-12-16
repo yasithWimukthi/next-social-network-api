@@ -1,5 +1,6 @@
 import cloudinary from 'cloudinary';
 import Post from '../models/post';
+import User from '../models/user';
 require('dotenv').config();
 
 cloudinary.config({
@@ -96,7 +97,15 @@ export const deletePost = async (req,res) => {
 
 export const newsFeed = async (req,res) => {
     try {
+        const user = await User.findById(req.user._id);
+        let following = user.following;
+        following.push(req.user._id);
 
+        const posts = await Post.find({postedBy:{$in:following}})
+            .populate('postedBy', '_id name image')
+            .sort({createdAt: -1})
+            .limit(10)
+        res.json(posts);
     }catch (e) {
         console.log(e);
     }
