@@ -93,3 +93,11 @@ export const deletePost = async (req,res) => {
         console.log(e);
     }
 }
+
+export const newsFeed = async (req,res) => {
+    try {
+
+    }catch (e) {
+        console.log(e);
+    }
+}
