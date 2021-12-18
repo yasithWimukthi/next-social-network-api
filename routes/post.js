@@ -10,7 +10,9 @@ const {
     deletePost,
     newsFeed,
     likePost,
-    unlikePost
+    unlikePost,
+    addComment,
+    removeComment
 } = require("../controllers/post");
 
 const router = express.Router();
@@ -27,5 +29,7 @@ router.delete('/delete-post/:_id',requireSignIn,canEditDeletePost,deletePost);
 router.get('/news-feed',requireSignIn,newsFeed);
 router.put('/like-post',requireSignIn,likePost);
 router.put('/unlike-post',requireSignIn,unlikePost);
+router.put('/add-comment',requireSignIn,addComment);
+router.delete('/remove-comment',requireSignIn,removeComment);
 
 module.exports = router;
