@@ -30,6 +30,6 @@ router.get('/news-feed',requireSignIn,newsFeed);
 router.put('/like-post',requireSignIn,likePost);
 router.put('/unlike-post',requireSignIn,unlikePost);
 router.put('/add-comment',requireSignIn,addComment);
-router.delete('/remove-comment',requireSignIn,removeComment);
+router.put('/remove-comment',requireSignIn,removeComment);
 
 module.exports = router;
