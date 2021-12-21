@@ -10,7 +10,8 @@ const {
     userFollow,
     userFollowing,
     removeFollow,
-    userUnfollow
+    userUnfollow,
+    searchUser
 } = require("../controllers/auth");
 const {requireSignIn} = require("../middlewares/auth");
 
@@ -25,5 +26,6 @@ router.get('/find-people',requireSignIn,findPeople);
 router.put('/user-follow',requireSignIn,addFollower,userFollow);
 router.put('/user-unfollow',requireSignIn,removeFollow,userUnfollow);
 router.get('/user-following',requireSignIn,userFollowing);
+router.get('/search-user/:query',requireSignIn,searchUser);
 
 module.exports = router;
